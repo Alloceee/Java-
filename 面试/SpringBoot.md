@@ -1,0 +1,9 @@
+## **Spring Bean 的加载过程**
+
+一个是populateBean,一个是initializeBean，这两个方法完成了bean的赋值与初始化。
+
+这里有一个BeanDefinitionValueResolver，这个类用来解析property里的value，如果是依赖其他bean则会到容器中找是否存在如果有则返回，没有则创建一个。spring又为每个对象的属性定义了一个数据结构：PropertyValue,这样做加大了容器对bean属性的修改的灵活性，上面的方法就是对每个属性进行处理然后通过beanWapper的setPropertyValues进行赋值。
+
+这里注意一下，bean有singleton和prototype两种 ，对于prototype，spring采用了原型模式，使用对象的deepcopy。
+
+至此，spring完成了对实例的赋值，然后就是调用initializeBean;
