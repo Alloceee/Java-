@@ -99,4 +99,11 @@ JPA和Hibernate的关系就像JDBC和JDBC驱动的关系，JPA是规范，Hibern
 
 5. 保存客户端到数据库
 
-   
+
+
+
+@ManyToOne与@Column注解在同一个属性上，改为@JoinColumn
+
+```java
+@ManyToOne@JoinColumn(name = "company_id",nullable = false,columnDefinition = "int(255) comment '所属公司'")
+```
