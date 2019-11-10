@@ -13,6 +13,7 @@
 
 
 
+
 可以看出来这个注解是用来项目启动时，进行加载参数的初始化参数的操作
 
 然后我就总结了下springboot中几种项目启动时，可以初始化加载参数的方法。
@@ -98,3 +99,15 @@ System.out.println(JSON.toJSONString(list));
 如果接口返回上面的数据， 客户端解析数据时会出现问题， 为了避免 $ref出现， 可以使用下面的代码：
 
 JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect)
+
+
+
+map遍历
+
+```java
+  Map map = request.getParameterMap();
+        map.forEach((key, value) -> {
+            list.add(key + ":" + value);
+   });
+```
+

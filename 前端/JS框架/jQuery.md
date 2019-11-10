@@ -18,3 +18,44 @@
 | JSON.parse(jsonString) | 将json字符串转化为json对象 |
 | JSON.stringify(object) | 将对象转化为json字符串     |
 
+
+
+## validate插件使用
+
+```javascript
+$(function() {
+					
+					$('form').validate({
+						rules: {
+							username: {
+								required: true,
+							},
+							password: {
+								required: true,
+								remote: {
+									url: '',
+									dataType: 'json',
+									data: {
+										username: function() {
+											return $('#username').val();
+										},
+										password: function() {
+											return $("#password").val()
+										}
+									}
+								}
+							}
+						},
+						messages: {
+							username: {
+								required: "请输入用户名"
+							},
+							password: {
+								required: "请输入密码",
+								remote: "用户名或密码不正确"
+							}
+						}
+					});
+				})
+```
+

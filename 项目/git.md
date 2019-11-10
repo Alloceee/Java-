@@ -11,3 +11,14 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQLXmGOUDQoWs6jrQ4BrcA6ffjJjeUKyFWvw08tun1
 
 ```
 
+
+
+
+
+发布项目
+
+1. git clone https://github.com/Alloceee/Java-.git
+2. git remote
+3. git add *
+4. git commit -m “java”
+5. git push

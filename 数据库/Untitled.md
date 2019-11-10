@@ -1,6 +1,6 @@
 IDEA新版本连接数据库需要添加时区
 
-![1565397812183](C:\Users\AlmostLover\Desktop\MarkDown笔记\数据库\1565397812183.png)
+![1565397812183](C:\Users\AlmostLover\Desktop\MarkDown笔记\java-\数据库\1565397812183.png)
 
 
 

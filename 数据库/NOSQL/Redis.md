@@ -510,3 +510,127 @@ keys pattern：查询所有符合给定模式pattern的key
 4. 架构层次的办法-消息机制MQ===触发第三方服务来更新数据
 5. 缓存失效机制
 
+
+
+## 应用
+
+### 缓存主页
+
+首先，缓存主页的目的并不是提高性能，而是减少[数据库](https://www.2cto.com/database/)访问压力，有效推迟数据库I/O瓶颈的到来。实现主页缓存的方法有很多，但是鉴于项目中使用了Redis对数据库读写做了缓存，因此把顺便也就把主页也缓存了吧。
+
+## 实现思路
+
+编写一个过滤器，在过滤器中拦截对主页的访问请求。此时向Redis服务器查询主页html的缓存，如果有则直接返回给客户端，如果没有，则在过滤器中截获JSP的渲染结果，放到Redis缓存中，以供下次使用。我们设定缓存过期时间为10分钟。
+
+## 实现
+
+实现需要注意的地方有两点：
+
+如何在Servlet过虑器中使用Spring容器 如何截获JSP渲染结果
+
+对于问题一，在Servlet Filter中使用Spring容器
+
+对于问题二，我们可以继承`HttpServletResponseWrapper`类来巧妙实现：
+
+```java
+public class ResponseWrapper extends HttpServletResponseWrapper {
+    private PrintWriter cachedWriter;
+    private CharArrayWriter bufferedWriter;
+ 
+    public ResponseWrapper(HttpServletResponse response) {
+        super(response);
+        // 这个是我们保存返回结果的地方
+        bufferedWriter = new CharArrayWriter();
+        // 这个是包装PrintWriter的，让所有结果通过这个PrintWriter写入到bufferedWriter中
+        cachedWriter = new PrintWriter(bufferedWriter);
+    }
+ 
+    @Override
+    public PrintWriter getWriter() {
+        return cachedWriter;
+    }
+ 
+    /**
+     * 获取原始的HTML页面内容。
+     *
+     * @return
+     */
+    public String getResult() {
+        return bufferedWriter.toString();
+    }
+}
+```
+
+然后在过滤器中使用该类：
+
+```java
+public class CacheFilter implements Filter, ApplicationContextAware {
+    private static final Logger log = LoggerFactory.getLogger(CacheFilter.class);
+ 
+    private static ApplicationContext ctx;
+ 
+    @Override
+    public void init(FilterConfig config) throws ServletException {
+    }
+ 
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletResponse resp = (HttpServletResponse) servletResponse;
+        HttpServletRequest req = (HttpServletRequest) servletRequest;
+ 
+        // 如果不是访问主页，放行
+        if (false == req.getRequestURI().equals("/")) {
+            filterChain.doFilter(servletRequest, resp);
+            return;
+        }
+ 
+ 
+        // 访问的是主页
+        // 从缓存中得到主页html
+        String html = getHtmlFromCache();
+        if (null == html) {
+            // 缓存中没有
+            // 截取生成的html并放入缓存
+            log.info("缓存不存在，生成缓存");
+            ResponseWrapper wrapper = new ResponseWrapper(resp);
+            // ***** 以上代码在请求被处理之前执行 *****
+ 
+            filterChain.doFilter(servletRequest, wrapper);
+ 
+            // ***** 以下代码在请求被处理后前执行 *****
+ 
+            // 放入缓存
+            html = wrapper.getResult();
+            putIntoCache(html);
+ 
+        }
+ 
+        // 返回响应
+        resp.setContentType("text/html; charset=utf-8");
+        resp.getWriter().print(html);
+    }
+ 
+    @Override
+    public void destroy() {
+ 
+    }
+ 
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.ctx = applicationContext;
+    }
+ 
+    private String getHtmlFromCache() {
+        StringRedisTemplate redis = (StringRedisTemplate)ctx.getBean("redisTemplate");
+        return redis.opsForValue().get("home");
+    }
+ 
+    private void putIntoCache(String html) {
+        StringRedisTemplate redis = (StringRedisTemplate)ctx.getBean("redisTemplate");
+        redis.opsForValue().set("home", html, TimeUnit.MINUTES.toSeconds(10)); // 10分钟
+    }
+}
+```
+
+按照这个逻辑，当客户的`GET`请求为`/`时，`CacheFilter`会首先向`Redis`发起请求获取主页的html代码，如果成功，则直接返回给客户端，失败，则通过刚刚写好的`ResponseWrapper`截获主页JSP的渲染结果，放入`Redis`，并设置过期时间为10分钟。这样下次请求时就可以直接从缓存中读取，而不需要经过 `Controller` -> `Service` -> `Dao` -> `Database`这么费事的流程了。
+
