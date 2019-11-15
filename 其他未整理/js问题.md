@@ -254,3 +254,31 @@ $(document).on('click','绑定点击事件的元素',function(){
 })
 ```
 
+
+
+Jquery、Java解析html字符串成dom对象，遍历dom对象获取图片元素（或者其子元素）
+使用 Jquery解析html:
+.parseHTML方法：将html字符串解析成dom对象，他返回的是一个array数组（包含其所有子元素）.parseHTML方法：将html字符串解析成dom对象，他返回的是一个array数组（包含其所有子元素）(doms).children(“img”)：获取doms对象节点下的所有img子元素；
+var content = item.neiRong;//爬取内容
+var doms = $.parseHTML(content);//解析Html串
+var imgs = $(doms).children("img");//children()方法：查找img元素
+var length = imgs.length;//获取img的个数
+1
+2
+3
+4
+使用Java解析Html串：
+使用Jsoup解析Html串，原理和Jquery是一样的，都是解析成dom对象；
+String str = "";
+str += "<div>";
+str += "<img src='http://a86d90395a7f8f486.jpeg' />";
+str += "<img src='http://a9c575a8d1763f889.jpeg' />";
+str += "<img src='http://de55fe7697ccb203e.jpeg' />";
+str += "<img src='http://weec82c7cb50b0496.jpeg' />";
+str += "</div>";
+//注意：Jsoup只能爬取静态内容，js无法获取；
+org.jsoup.nodes.Document document = org.jsoup.Jsoup.parse(str);
+Elements select = document.select("img");
+————————————————
+版权声明：本文为CSDN博主「ZixiangLi」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/zixiangli/article/details/78689878
