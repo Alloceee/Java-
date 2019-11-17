@@ -282,3 +282,33 @@ Elements select = document.select("img");
 ————————————————
 版权声明：本文为CSDN博主「ZixiangLi」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
 原文链接：https://blog.csdn.net/zixiangli/article/details/78689878
+
+
+
+
+
+#### ajax上传文件
+
+```javascript
+ $.ajax({
+            data: formData,
+            url: '/admin/company/import',
+            type: 'POST',
+            dataType: 'json',
+            processData : false, // 使数据不做处理
+            contentType : false, // 不要设置Content-Type请求头
+            success: function (res) {
+                console.log(res);
+                // if (res.code > 0) {
+                //     layer.msg(res.msg);
+                // } else {
+                //     layer.msg(res.msg);
+                //     location.reload();
+                // }
+            }
+        })
+```
+
+>  processData : false, // 使数据不做处理
+>  contentType : false, // 不要设置Content-Type请求头
+

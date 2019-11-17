@@ -65,7 +65,7 @@ node.data: true
 
 参考博客 https://segmentfault.com/a/1190000018625101?utm_source=tag-newest 
 
-
+ https://blog.csdn.net/chen_2890/article/details/83895646 
 
 1. properties
 
@@ -108,67 +108,67 @@ spring.data.elasticsearch.repositories.enabled=true
            //获取数据
            long totalElements = page.getTotalElements();
            System.out.println("获取的总条数:"+totalElements);
-   
+      
            for(Item item:page){
                System.out.println(item);
            }
-   
-   
-       }
-   
-   
-       /**
-        * @Description:
-        * termQuery:功能更强大，除了匹配字符串以外，还可以匹配
-        * int/long/double/float/....	
-        * @Author: https://blog.csdn.net/chen_2890			
-        */
-       @Test
-       public void testTermQuery(){
-           NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
-           builder.withQuery(QueryBuilders.termQuery("price",998.0));
-           // 查找
-           Page<Item> page = this.itemRepository.search(builder.build());
-   
-           for(Item item:page){
-               System.out.println(item);
-           }
-       }
-   	/**
-        * @Description:布尔查询
-        * @Author: https://blog.csdn.net/chen_2890			
-        */
-       @Test
-       public void testBooleanQuery(){
-           NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
-   
-           builder.withQuery(
-                   QueryBuilders.boolQuery().must(QueryBuilders.matchQuery("title","华为"))
-                                            .must(QueryBuilders.matchQuery("brand","华为"))
-           );
-   
-           // 查找
-           Page<Item> page = this.itemRepository.search(builder.build());
-           for(Item item:page){
-               System.out.println(item);
-           }
-       }
-   
-   	/**
-        * @Description:模糊查询
-        * @Author: https://blog.csdn.net/chen_2890			
-        */
-       @Test
-       public void testFuzzyQuery(){
-           NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
-           builder.withQuery(QueryBuilders.fuzzyQuery("title","faceoooo"));
-           Page<Item> page = this.itemRepository.search(builder.build());
-           for(Item item:page){
-               System.out.println(item);
-           }
-   
-       }
-   
-   ```
+    }
+    ```
 
-4. 
+   
+
+
+```java
+   /**
+    * @Description:
+    * termQuery:功能更强大，除了匹配字符串以外，还可以匹配
+    * int/long/double/float/....	
+    * @Author: https://blog.csdn.net/chen_2890			
+    */
+   @Test
+   public void testTermQuery(){
+       NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
+       builder.withQuery(QueryBuilders.termQuery("price",998.0));
+       // 查找
+       Page<Item> page = this.itemRepository.search(builder.build());
+   
+       for(Item item:page){
+           System.out.println(item);
+       }
+   }
+```
+   
+```java
+/**
+     * @Description:布尔查询
+     * @author: https://blog.csdn.net/chen_2890
+     */
+    @Test
+    public void testBooleanQuery() {
+        NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();    builder.withQuery(QueryBuilders.boolQuery().must(QueryBuilders.matchQuery("title","华为")).must(QueryBuilders.matchQuery("brand", "华为")));
+        // 查找
+        Page<Item> page = this.itemRepository.search(builder.build());
+        for (Item item : page) {
+            System.out.println(item);
+        }
+    }
+```
+
+  ```java
+/**
+
+   * @Description:模糊查询
+     uthor: https://blog.csdn.net/chen_2890			
+             */
+            @Test
+            public void testFuzzyQuery(){
+     NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
+     builder.withQuery(QueryBuilders.fuzzyQuery("title","faceoooo"));
+     Page<Item> page = this.itemRepository.search(builder.build());
+     for(Item item:page){
+         System.out.println(item);
+     }
+
+   } 
+  ```
+
