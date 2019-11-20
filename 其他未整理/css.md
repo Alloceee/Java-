@@ -22,3 +22,11 @@
 }
 ```
 
+### span设置为inline-block之后不对齐
+
+添加：设置垂直对齐方式
+
+```css
+vertical-align: bottom;
+```
+

@@ -14,6 +14,7 @@
 
 
 
+
 可以看出来这个注解是用来项目启动时，进行加载参数的初始化参数的操作
 
 然后我就总结了下springboot中几种项目启动时，可以初始化加载参数的方法。
@@ -83,12 +84,14 @@ strategy属性：提供四种值:
 
 如果使用Hibernate, 查询出重复的数据或者使用类似下面的数据
 
+```java
 User s = new User();
 s.setAccount("2121");
 List<User> list = new ArrayList<User>();
 list.add(s);
 list.add(s);
 System.out.println(JSON.toJSONString(list));
+```
 
 运行结果是：
 
@@ -98,7 +101,11 @@ System.out.println(JSON.toJSONString(list));
 
 如果接口返回上面的数据， 客户端解析数据时会出现问题， 为了避免 $ref出现， 可以使用下面的代码：
 
+```java
 JSON.toJSONString(list, SerializerFeature.DisableCircularReferenceDetect)
+```
+
+
 
 
 

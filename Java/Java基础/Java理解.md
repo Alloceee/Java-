@@ -183,12 +183,12 @@ MethodInterceptor：动态代理对象的方法都会转发到intercept方法进
 
 
 
+### 13.length()和length有什么不同
+
+- length是针对数组的属性，查看数组的长度
+- length()是针对字符串的方法，查看字符串的长度
 
 
-- length()和length有什么不同
 
-  - length是针对数组的属性，查看数组的长度
-  - length()是针对字符串的方法，查看字符串的长度
-  
-  
+
 

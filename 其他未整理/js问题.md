@@ -312,3 +312,102 @@ Elements select = document.select("img");
 >  processData : false, // 使数据不做处理
 >  contentType : false, // 不要设置Content-Type请求头
 
+
+
+#### 获取url参数
+
+```javascript
+ function GetQueryString(name)
+        {
+            var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if(r!=null)return  unescape(r[2]); return null;
+        }
+```
+
+
+
+#### ajax上传文件进度条
+
+```html
+<div class="progress" hidden>
+    <div class="progress-bar p_bar" role="progressbar" aria-valuenow="60"
+         aria-valuemin="0" aria-valuemax="100">
+        <span class="uploadFile_rate">0%</span>
+    </div>
+</div>
+```
+
+
+
+```javascript
+  var sendFile = function (_this, files) {
+            var formData = new FormData();
+            if (files.length === 1) {
+                formData.append("file", files[0]);
+            } else {
+                //循环添加到formData中
+                for (var i = 0; i < files.length; i++) {
+                    formData.append("file" + i, files[i]);
+                }
+            }
+            $(_this).siblings(".progress").show();
+            var rate = $(_this).siblings(".progress").find('.uploadFile_rate');
+            var bar = $(_this).siblings(".progress").children('.p_bar');
+            $.ajax({
+                data: formData,
+                type: 'post',
+                dataType: "json",
+                url: '/admin/upload/fileUpload',
+                // async: false,
+                processData: false, // 使数据不做处理
+                contentType: false, // 不要设置Content-Type请求头
+                success: function (data) {
+                    $(_this).siblings("input:hidden").val(JSON.stringify(data));
+                    alert("上传文件成功！");
+                },
+                error: function (e) {
+                    console.log("error")
+                },
+                xhr: function () {  // custom xhr
+                    myXhr = $.ajaxSettings.xhr();
+                    if (myXhr.upload) { // if upload property exists
+                        myXhr.upload.addEventListener('progress', function (e) {
+                            var done = e.position || e.loaded;
+                            var total = e.totalSize || e.total;
+                            var percent = Math.round(done / total * 100);
+                            rate.html(percent + '%');
+                            bar.animate({
+                                width: percent + "%"
+                            }, {
+                                duration: 5
+                            });
+                        }, false);
+                        myXhr.addEventListener('load', function (e) {
+                            //upload done
+                        });
+                    }
+                    return myXhr;
+                }
+            })
+        };
+```
+
+```css
+.progress {
+    width: 200px;
+    height: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin: 10px 20px;
+    overflow: hidden;
+}
+/* 初始状态设置进度条宽度为0px */
+.progress > div {
+    width: 0;
+    height: 100%;
+    background-color: yellowgreen;
+    transition: all .3s ease;
+}
+```
+
