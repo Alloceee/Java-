@@ -1,6 +1,6 @@
 ## 整合springboot
 
-### 1.pom.xml
+### 1.添加相关依赖pom.xml
 
 ```xml
 <dependency>
