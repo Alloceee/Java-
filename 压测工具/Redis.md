@@ -1,5 +1,9 @@
 ## redis-benchmark
 
+https://www.cnblogs.com/silent2012/p/4514901.html
+
+Redis-benchmark是官方自带的Redis性能测试工具，可以有效的测试Redis服务的性能。 
+
 ### Redis压力压测
 
 使用自带的压力压测工具
