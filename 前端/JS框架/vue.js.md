@@ -158,3 +158,70 @@ import store from './store'
 
 ```
 
+
+
+
+
+# [在vue中使用swiper](https://www.cnblogs.com/taokele/p/10430914.html)
+
+1、使用npm下载vue-awesome-swiper 
+
+```shell
+npm install vue-awesome-swiper --save
+```
+
+2、在main.js中引用
+
+```javascript
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+Vue.use(VueAwesomeSwiper)
+import 'swiper/dist/css/swiper.css'（css需要单独引用）
+```
+
+3、在组件中使用
+
+```javascript
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
+ 
+export default {
+  components: {
+    swiper,
+    swiperSlide
+  }
+}
+```
+
+html代码：
+
+```html
+<swiper :options="swiperOption">
+    <swiper-slide>1</swiper-slide>
+    <swiper-slide>1</swiper-slide>
+    <swiper-slide>1</swiper-slide>
+    <div class="swiper-pagination swiper-pagination-bullets"></div>
+</swiper>
+```
+
+javascript代码：
+
+```javascript
+export default {
+  name: '',
+  data () {
+    return {
+      swiperOption:{
+        slidesPerView: 'auto',
+        centeredSlides:true,
+        spaceBetween: 10,
+        loop:true,
+        speed:600, //config参数同swiper4,与官网一致
+        pagination: '.swiper-pagination',
+      }
+    }
+  },
+  components: {
+    swiper,
+    swiperSlide
+  }
+}
+```
